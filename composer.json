@@ -1,0 +1,21 @@
+{
+    "name": "def/cipher",
+    "type": "library",
+    "homepage": "https://github.com/andrew-kamenchuk/def-cipher",
+    "description": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "andrew-kamenchuk",
+            "email": "andrew.kamenchuk@gmail.com"
+        }
+    ],
+    "require": {
+            "php": ">=7.0"
+    },
+    "autoload": {
+            "psr-4": {
+                "def\\Cipher\\": ""
+            }
+    }
+}
