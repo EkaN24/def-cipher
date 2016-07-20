@@ -1,34 +1,33 @@
 <?php
 namespace def\Cipher;
 
-use InvalidArgumentException;
-
-/**
- * sipmple proxy for ciphers
- */
-class Cipher implements CipherInterface
+class Cipher
 {
-    /**
-     * @var CipherInterface
-     */
-    private $cipher;
-
-    public function __construct(string $cipher, ...$cargs)
+    public static function merge(CipherInterface ...$ciphers) : CipherInterface
     {
-        if (!is_subclass_of($cipher, CipherInterface::class)) {
-            throw new InvalidArgumentException("Unknown '$cipher' cipher class");
-        }
+        return new class($ciphers) implements CipherInterface {
+            private $ciphers;
 
-        $this->cipher = new $cipher(...$cargs);
-    }
+            public function __construct(array $ciphers)
+            {
+                $this->ciphers = $ciphers;
+            }
 
-    public function encode(string $string) : string
-    {
-        return $this->cipher->encode($string);
-    }
+            public function encode(string $string) : string
+            {
+                foreach ($this->ciphers as $cipher) {
+                    $string = $cipher->encode($string);
+                }
+                return $string;
+            }
 
-    public function decode(string $string) : string
-    {
-        return $this->cipher->decode($string);
+            public function decode(string $string) : string
+            {
+                foreach (array_reverse($this->ciphers) as $cipher) {
+                    $string = $cipher->decode($string);
+                }
+                return $string;
+            }
+        };
     }
 }
