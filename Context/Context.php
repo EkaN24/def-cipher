@@ -5,18 +5,23 @@ class Context implements ContextInterface
 {
     protected $data = [];
 
-    public function __set(string $key, $value)
+    public function set(string $key, $value)
     {
         $this->data[$key] = $value;
     }
 
-    public function __get(string $key)
+    public function get(string $key)
     {
         return $this->data[$key];
     }
 
-    public function __isset(string $key)
+    public function exists(string $key)
     {
         return isset($this->data[$key]);
+    }
+
+    public function copy(ContextInterface $context)
+    {
+        $this->data = array_merge($this->data, $context->data);
     }
 }

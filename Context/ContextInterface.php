@@ -3,9 +3,11 @@ namespace def\Cipher\Context;
 
 interface ContextInterface
 {
-    public function __set(string $key, $value);
+    public function set(string $key, $value);
 
-    public function __get(string $key);
+    public function get(string $key);
 
-    public function __isset(string $key) : boolean;
+    public function exists(string $key) : boolean;
+
+    public function copy(ContextInterface $context);
 }
