@@ -15,7 +15,11 @@
     },
     "autoload": {
             "psr-4": {
-                "def\\Cipher\\": ""
-            }
+                "def\\Cipher\\": "",
+                "def\\Cipher\\Test\\": "./tests"
+            },
+            "files" : [
+                "./functions.php"
+            ]
     }
 }

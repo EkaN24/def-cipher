@@ -4,6 +4,8 @@ namespace def\Cipher\Alphabet;
 use Traversable;
 use IteratorAggregate;
 use ArrayIterator;
+use OutOfRangeException;
+use OutOfBoundsException;
 
 class Alphabet implements IteratorAggregate, AlphabetInterface
 {
@@ -27,7 +29,11 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
 
     public function getLetter(int $code) : string
     {
-        return $this->letters[$code];
+        if (isset($this->letters[$code])) {
+            return $this->letters[$code];
+        }
+
+        throw new OutOfRangeException("$code index out of range");
     }
 
     public function getLetterCode(string $letter) : int
@@ -35,6 +41,8 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
         if (false !== $code = array_search($letter, $this->letters, true)) {
             return $code;
         }
+
+        throw new OutOfBoundsException("Undefined letter '$letter'");
     }
 
     public function toArray() : array
