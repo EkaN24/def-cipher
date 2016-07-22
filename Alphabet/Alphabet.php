@@ -29,20 +29,20 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
 
     public function getLetter(int $code) : string
     {
-        if (isset($this->letters[$code])) {
-            return $this->letters[$code];
+        if (!isset($this->letters[$code])) {
+            throw new OutOfRangeException("$code index out of range");
         }
 
-        throw new OutOfRangeException("$code index out of range");
+        return $this->letters[$code];
     }
 
     public function getLetterCode(string $letter) : int
     {
-        if (false !== $code = array_search($letter, $this->letters, true)) {
-            return $code;
+        if (false === $code = array_search($letter, $this->letters, true)) {
+            throw new OutOfBoundsException("Undefined letter '$letter'");
         }
 
-        throw new OutOfBoundsException("Undefined letter '$letter'");
+        return $code;
     }
 
     public function toArray() : array

@@ -3,7 +3,7 @@ namespace def\Cipher\Test\Alphabet;
 
 use def\Cipher\Alphabet\AlphabetInterface;
 
-abstract class AbstractAlphabetTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractAlphabetInterfaceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return def\Cipher\Alphabet\AlphabetInterface
@@ -52,7 +52,7 @@ abstract class AbstractAlphabetTest extends \PHPUnit_Framework_TestCase
      */
     public function testLetterIsLowercase($letter)
     {
-        $this->assertEquals(strtolower($letter), $letter);
+        $this->assertEquals(mb_strtolower($letter), $letter);
     }
 
     public function getLetters()
