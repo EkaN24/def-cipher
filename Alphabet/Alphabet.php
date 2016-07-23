@@ -17,11 +17,7 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function __construct(array $letters)
     {
-        $i = 1;
-
-        foreach ($letters as $letter) {
-            $this->letters[$i++] = $letter;
-        }
+        $this->letters = array_values($letters);
     }
 
     public function getLength() : int
