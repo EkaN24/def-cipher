@@ -11,4 +11,6 @@ interface CipherInterface
     public function encode(string $string) : string;
 
     public function decode(string $code) : string;
+
+    public function getAlphabet() : AlphabetInterface;
 }

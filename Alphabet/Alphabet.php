@@ -9,7 +9,7 @@ use OutOfBoundsException;
 
 class Alphabet implements IteratorAggregate, AlphabetInterface
 {
-    private $letters;
+    private $letters = [];
     private $length;
 
     /**
@@ -17,7 +17,11 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function __construct(array $letters)
     {
-        $this->letters = $letters;
+        $i = 1;
+
+        foreach ($letters as $letter) {
+            $this->letters[$i++] = $letter;
+        }
     }
 
     public function getLength() : int

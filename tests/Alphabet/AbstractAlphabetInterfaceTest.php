@@ -5,9 +5,6 @@ use def\Cipher\Alphabet\AlphabetInterface;
 
 abstract class AbstractAlphabetInterfaceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return def\Cipher\Alphabet\AlphabetInterface
-     */
     abstract public function getAlphabets();
 
     /**
