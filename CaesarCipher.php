@@ -5,10 +5,17 @@ use def\Cipher\Alphabet\AlphabetInterface;
 use def\Cipher\Context\ContextInterface;
 use def\Cipher\Context\Context;
 
+/**
+ * Caesar chiper
+ * @see https://en.wikipedia.org/wiki/Caesar_cipher
+ */
 class CaesarCipher extends LinearSubstitutionCipher
 {
     const CONTEXT_KEY_SHIFT = self::class . '-shift';
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(AlphabetInterface $alphabet, ContextInterface $context = null)
     {
         $shift = 0;

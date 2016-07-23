@@ -1,6 +1,9 @@
 <?php
 namespace def\Cipher;
 
+/**
+ * merge ciphers into one
+ */
 class Compose implements EncodeInterface, DecodeInterface
 {
     /**
@@ -13,6 +16,9 @@ class Compose implements EncodeInterface, DecodeInterface
         $this->ciphers = $ciphers;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function encode(string $string) : string
     {
         $code = $string;
@@ -24,6 +30,9 @@ class Compose implements EncodeInterface, DecodeInterface
         return $code;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function decode(string $code) : string
     {
         $string = $code;

@@ -1,6 +1,9 @@
 <?php
 namespace def\Cipher;
 
+/**
+ * greatest common divisor
+ */
 function gcd(int $a, int $b) : int
 {
     while ($b != 0) {
@@ -12,6 +15,9 @@ function gcd(int $a, int $b) : int
     return $a;
 }
 
+/**
+ * greatest common divisor - recursive version
+ */
 function gcdr(int $a, int $b)
 {
     if ($b == 0) {
@@ -21,6 +27,9 @@ function gcdr(int $a, int $b)
     return gcdr($b, $a % $b);
 }
 
+/**
+ * check whether int is prime
+ */
 function prime(int $a) : bool
 {
     if ($a <= 1) {
@@ -36,13 +45,17 @@ function prime(int $a) : bool
     return true;
 }
 
+/**
+ * checks whether two integers are coprime
+ */
 function coprime(int $a, int $b) : bool
 {
     return 1 == gcd($a, $b);
 }
 
 /**
- * https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Modular_integers
+ * such int x, that a*x = 1 mod b, modular inverse
+ * @see https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Modular_integers
  */
 function inverse(int $a, int $b) : int
 {
@@ -59,5 +72,5 @@ function inverse(int $a, int $b) : int
         return $t < 0 ? $t + $b : $t;
     }
 
-    // make it fail
+    // let it fail
 }

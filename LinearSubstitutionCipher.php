@@ -7,6 +7,9 @@ use def\Cipher\Context\Context;
 use InvalidArgumentException;
 use BadMethodCallException;
 
+/**
+ * makes a linear substitution x -> a*x + b mod alphabet length
+ */
 class LinearSubstitutionCipher implements SubstitutionCipherInterface
 {
     const CONTEXT_KEY_FACTOR = self::class . '-factor';
@@ -16,11 +19,25 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
      * @var def\Cipher\Alphabet\AlphabetInterface
      */
     private $alphabet;
+
+    /**
+     * @var string
+     */
     private $encoding;
 
+    /**
+     * @var int
+     */
     private $factor = 1;
+
+    /**
+     * @var int
+     */
     private $shift  = 0;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(AlphabetInterface $alphabet, ContextInterface $context = null)
     {
         $this->alphabet = $alphabet;
@@ -55,7 +72,6 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
             if ($context->exists(self::CONTEXT_KEY_SHIFT)) {
                 $shift = $context->get(self::CONTEXT_KEY_SHIFT);
 
-
                 if (is_int($shift)) {
                     $shift = $shift % $alphabet->getLength();
 
@@ -69,6 +85,9 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function encode(string $string) : string
     {
         $chars = [];
@@ -80,6 +99,9 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
         return implode($chars);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function decode(string $code) : string
     {
         $context = new Context([
@@ -90,6 +112,9 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
         return (new self($this->alphabet, $context))->encode($code);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function substitute(string $letter) : string
     {
         $lowercase = mb_strtolower($letter, $this->encoding);
@@ -106,11 +131,17 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
         return $lowercase == $letter ? $newLetter : mb_strtoupper($newLetter, $this->encoding);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function crack(string $code) : string
     {
         throw new BadMethodCallException("Not implemented yet");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAlphabet() : AlphabetInterface
     {
         return $this->alphabet;
