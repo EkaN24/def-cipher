@@ -2,7 +2,8 @@
     "name": "def/cipher",
     "type": "library",
     "homepage": "https://github.com/andrew-kamenchuk/def-cipher",
-    "description": "",
+    "keywords": ["cipher", "caesar cipher", "linear cipher"],
+    "description": "Caesar cipher and others",
     "license": "MIT",
     "authors": [
         {

@@ -4,6 +4,9 @@
         <testsuite name="Cipher Alphabet Tests">
             <directory>./tests/Alphabet</directory>
         </testsuite>
+        <testsuite name="Cipher Tests">
+            <directory>./tests/Cipher</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
 
