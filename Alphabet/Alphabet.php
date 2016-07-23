@@ -12,9 +12,12 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
     private $letters;
     private $length;
 
-    public function __construct($first, $last)
+    /**
+     * MUST be lowercase
+     */
+    public function __construct(array $letters)
     {
-        $this->letters = range($first, $last);
+        $this->letters = $letters;
     }
 
     public function getLength() : int

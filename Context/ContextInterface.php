@@ -9,7 +9,7 @@ interface ContextInterface
 
     public function get(string $key);
 
-    public function exists(string $key) : boolean;
+    public function exists(string $key) : bool;
 
     public function copy(ContextInterface $context);
 }

@@ -20,7 +20,7 @@ class Context implements ContextInterface
         return $this->data[$key];
     }
 
-    public function exists(string $key)
+    public function exists(string $key) : bool
     {
         return isset($this->data[$key]);
     }

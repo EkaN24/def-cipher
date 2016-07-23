@@ -8,57 +8,67 @@ abstract class AbstractAlphabetInterfaceTest extends \PHPUnit_Framework_TestCase
     /**
      * @return def\Cipher\Alphabet\AlphabetInterface
      */
-    abstract public function getAlphabet();
+    abstract public function getAlphabets();
 
-    public function testImplements()
+    /**
+     * @dataProvider getAlphabets
+     */
+    public function testImplements($alphabet)
     {
-        $this->assertInstanceOf(AlphabetInterface::class, $this->getAlphabet());
+        $this->assertInstanceOf(AlphabetInterface::class, $alphabet);
     }
 
     /**
-     * @dataProvider getLetters
+     * @dataProvider getAlphabets
      */
-    public function testGetLetter($letter, $key)
+    public function testGetLetter($alphabet)
     {
-        $this->assertEquals($letter, $this->getAlphabet()->getLetter($key));
+        foreach ($alphabet as $key => $letter) {
+            $this->assertEquals($letter, $alphabet->getLetter($key));
+        }
     }
 
     /**
-     * @dataProvider getLetters
+     * @dataProvider getAlphabets
      */
-    public function testIsLetter($letter)
+    public function testIsLetter($alphabet)
     {
-        $this->assertTrue($this->getAlphabet()->isLetter($letter));
+        foreach ($alphabet as $letter) {
+            $this->assertTrue($alphabet->isLetter($letter));
+        }
     }
 
     /**
-     * @dataProvider getLetters
+     * @dataProvider getAlphabets
      */
-    public function testGetLetterCode($letter, $key)
+    public function testGetLetterCode($alphabet)
     {
-        $this->assertEquals($key, $this->getAlphabet()->getLetterCode($letter));
+        foreach ($alphabet as $key => $letter) {
+            $this->assertEquals($key, $alphabet->getLetterCode($letter));
+        }
     }
 
     /**
-     * @dataProvider getLetters
+     * @dataProvider getAlphabets
      */
-    public function testLetterIsChar($letter)
+    public function testLetterIsChar($alphabet)
     {
-        $this->assertStringMatchesFormat("%c", $letter);
+        $encoding = mb_detect_encoding($alphabet->toString());
+
+        foreach ($alphabet as $letter) {
+            $this->assertEquals(1, mb_strlen($letter, $encoding));
+        }
     }
 
     /**
-     * @dataProvider getLetters
+     * @dataProvider getAlphabets
      */
-    public function testLetterIsLowercase($letter)
+    public function testLetterIsLowercase($alphabet)
     {
-        $this->assertEquals(mb_strtolower($letter), $letter);
-    }
+        $encoding = mb_detect_encoding($alphabet->toString()) ?: mb_internal_encoding();
 
-    public function getLetters()
-    {
-        foreach ($this->getAlphabet() as $key => $letter) {
-            yield [$letter, $key];
+        foreach ($alphabet as $letter) {
+            $this->assertEquals(mb_strtolower($letter), $letter);
         }
     }
 }
