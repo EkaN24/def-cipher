@@ -56,16 +56,4 @@ abstract class AbstractAlphabetInterfaceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(1, mb_strlen($letter, $encoding));
         }
     }
-
-    /**
-     * @dataProvider getAlphabets
-     */
-    public function testLetterIsLowercase($alphabet)
-    {
-        $encoding = mb_detect_encoding($alphabet->toString()) ?: mb_internal_encoding();
-
-        foreach ($alphabet as $letter) {
-            $this->assertEquals(mb_strtolower($letter), $letter);
-        }
-    }
 }

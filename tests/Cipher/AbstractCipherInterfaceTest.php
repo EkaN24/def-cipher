@@ -40,13 +40,7 @@ abstract class AbstractCipherInterfaceTest extends \PHPUnit_Framework_TestCase
      */
     private static function getRandomStrings(AlphabetInterface $alphabet)
     {
-        $encoding   = mb_detect_encoding($alphabet->toString()) ?: mb_internal_encoding();
-
-        $uppers     = array_map(function ($letter) use ($encoding) {
-            return mb_strtoupper($letter, $encoding);
-        }, $alphabet->toArray());
-
-        $characters = array_merge($alphabet->toArray(), self::$sampleNonLetterChars, $uppers);
+        $characters = array_merge($alphabet->toArray(), self::$sampleNonLetterChars);
 
         $charactersLength = count($characters);
 

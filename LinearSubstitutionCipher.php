@@ -21,11 +21,6 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
     private $alphabet;
 
     /**
-     * @var string
-     */
-    private $encoding;
-
-    /**
      * @var int
      */
     private $factor = 1;
@@ -41,8 +36,6 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
     public function __construct(AlphabetInterface $alphabet, ContextInterface $context = null)
     {
         $this->alphabet = $alphabet;
-
-        $this->encoding = mb_detect_encoding($alphabet->toString()) ?: mb_internal_encoding();
 
         if (isset($context)) {
             if ($context->exists(self::CONTEXT_KEY_FACTOR)) {
@@ -117,18 +110,14 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
      */
     public function substitute(string $letter) : string
     {
-        $lowercase = mb_strtolower($letter, $this->encoding);
-
-        if (!$this->alphabet->isLetter($lowercase)) {
+        if (!$this->alphabet->isLetter($letter)) {
             return $letter;
         }
 
-        $code = $this->alphabet->getLetterCode($lowercase);
+        $code = $this->alphabet->getLetterCode($letter);
         $code = ($code * $this->factor + $this->shift) % $this->alphabet->getLength();
 
-        $newLetter = $this->alphabet->getLetter($code);
-
-        return $lowercase == $letter ? $newLetter : mb_strtoupper($newLetter, $this->encoding);
+        return $this->alphabet->getLetter($code);
     }
 
     /**

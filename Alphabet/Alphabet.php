@@ -10,15 +10,17 @@ use OutOfBoundsException;
 class Alphabet implements IteratorAggregate, AlphabetInterface
 {
     private $letters = [];
+    private $enumeration = [];
     private $length;
 
     /**
      * instantiates an alphabet from letter[]
-     * @param string[] $letters, MUST be lowercase single character
+     * @param string[] $letters, MUST be single characters
      */
     public function __construct(array $letters)
     {
-        $this->letters = array_values($letters);
+        $this->enumeration = array_values($letters);
+        $this->letters = array_combine($this->enumeration, $this->enumeration);
     }
 
     /**
@@ -34,7 +36,7 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function isLetter(string $letter) : bool
     {
-        return in_array($letter, $this->letters, true);
+        return isset($this->letters[$letter]);
     }
 
     /**
@@ -42,11 +44,11 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function getLetter(int $code) : string
     {
-        if (!isset($this->letters[$code])) {
+        if (!isset($this->enumeration[$code])) {
             throw new OutOfRangeException("$code index out of range");
         }
 
-        return $this->letters[$code];
+        return $this->enumeration[$code];
     }
 
     /**
@@ -54,7 +56,7 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function getLetterCode(string $letter) : int
     {
-        if (false === $code = array_search($letter, $this->letters, true)) {
+        if (false === $code = array_search($letter, $this->enumeration, true)) {
             throw new OutOfBoundsException("Undefined letter '$letter'");
         }
 
@@ -66,7 +68,7 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function toArray() : array
     {
-        return $this->letters;
+        return $this->enumeration;
     }
 
     /**
@@ -82,6 +84,6 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function getIterator() : Traversable
     {
-        return new ArrayIterator($this->letters);
+        return new ArrayIterator($this->enumeration);
     }
 }
