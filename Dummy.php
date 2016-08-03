@@ -4,13 +4,8 @@ namespace def\Cipher;
 /**
  * does nothing
  */
-class Dummy implements CipherInterface
+class Dummy implements EncodeInterface, DecodeInterface
 {
-    public function __construct(AlphabetInterface $alphabet)
-    {
-        // pass
-    }
-
     /**
      * {@inheritdoc}
      */

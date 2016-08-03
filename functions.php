@@ -1,11 +1,19 @@
 <?php
 namespace def\Cipher;
 
+function str_split(string $string) : array
+{
+    return preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY);
+}
+
 /**
  * greatest common divisor
  */
 function gcd(int $a, int $b) : int
 {
+    $a = abs($a);
+    $b = abs($b);
+
     while ($b != 0) {
         $d = $a;
         $a = $b;
@@ -20,6 +28,9 @@ function gcd(int $a, int $b) : int
  */
 function gcdr(int $a, int $b)
 {
+    $a = abs($a);
+    $b = abs($b);
+
     if ($b == 0) {
         return $a;
     }

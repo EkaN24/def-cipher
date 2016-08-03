@@ -2,8 +2,6 @@
 namespace def\Cipher;
 
 use def\Cipher\Alphabet\AlphabetInterface;
-use def\Cipher\Context\ContextInterface;
-use def\Cipher\Context\Context;
 use InvalidArgumentException;
 use BadMethodCallException;
 
@@ -12,9 +10,6 @@ use BadMethodCallException;
  */
 class LinearSubstitutionCipher implements SubstitutionCipherInterface
 {
-    const CONTEXT_KEY_FACTOR = self::class . '-factor';
-    const CONTEXT_KEY_SHIFT  = self::class . '-shift';
-
     /**
      * @var def\Cipher\Alphabet\AlphabetInterface
      */
@@ -23,59 +18,51 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
     /**
      * @var int
      */
-    private $factor = 1;
+    private $factor;
 
     /**
      * @var int
      */
-    private $shift  = 0;
+    private $shift;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(AlphabetInterface $alphabet, ContextInterface $context = null)
+    public function __construct(AlphabetInterface $alphabet, int $factor, int $shift)
     {
-        $this->alphabet = $alphabet;
+        $length = $alphabet->getLength();
 
-        if (isset($context)) {
-            if ($context->exists(self::CONTEXT_KEY_FACTOR)) {
-                $factor = $context->get(self::CONTEXT_KEY_FACTOR);
+        $factor %= $length;
 
-                if (is_int($factor)) {
-                    $factor = $factor % $alphabet->getLength();
-
-                    if ($factor < 0) {
-                        $factor += $alphabet->getLength();
-                    }
-
-                    if (!coprime($alphabet->getLength(), $factor)) {
-                        throw new InvalidArgumentException(
-                            sprintf(
-                                "Cipher factor (%d) and alphabet length (%d) need to be coprime",
-                                $factor,
-                                $alphabet->getLength()
-                            )
-                        );
-                    }
-
-                    $this->factor = $factor;
-                }
-            }
-
-            if ($context->exists(self::CONTEXT_KEY_SHIFT)) {
-                $shift = $context->get(self::CONTEXT_KEY_SHIFT);
-
-                if (is_int($shift)) {
-                    $shift = $shift % $alphabet->getLength();
-
-                    if ($shift < 0) {
-                        $shift += $alphabet->getLength();
-                    }
-
-                    $this->shift = $shift;
-                }
-            }
+        if ($factor < 0) {
+            $factor += $length;
         }
+
+        if (!coprime($factor, $length)) {
+            throw new InvalidArgumentException(
+                sprintf("Cipher factor (%d) and alphabet length (%d) need to be coprime", $length, $factor)
+            );
+        }
+
+        $shift %= $length;
+
+        if ($shift < 0) {
+            $shift += $length;
+        }
+
+
+        $this->factor = $factor;
+        $this->shift  = $shift;
+
+        $this->alphabet = $alphabet;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAlphabet() : AlphabetInterface
+    {
+        return $this->alphabet;
     }
 
     /**
@@ -85,7 +72,7 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
     {
         $chars = [];
 
-        foreach (preg_split("//u", $string, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+        foreach (str_split($string) as $char) {
             $chars[] = $this->substitute($char);
         }
 
@@ -97,12 +84,18 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
      */
     public function decode(string $code) : string
     {
-        $context = new Context([
-            self::CONTEXT_KEY_FACTOR => $rfactor = inverse($this->factor, $this->alphabet->getLength()),
-            self::CONTEXT_KEY_SHIFT  => -$rfactor * $this->shift,
-        ]);
+        $length = $this->alphabet->getLength();
 
-        return (new self($this->alphabet, $context))->encode($code);
+        $factor = inverse($this->factor, $length);
+        $shift  = $length - (($factor * $this->shift) % $length);
+
+        $chars = [];
+
+        foreach (str_split($code) as $char) {
+            $chars[] = self::subst($this->alphabet, $char, $factor, $shift);
+        }
+
+        return implode($chars);
     }
 
     /**
@@ -110,14 +103,18 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
      */
     public function substitute(string $letter) : string
     {
-        if (!$this->alphabet->isLetter($letter)) {
+        return self::subst($this->alphabet, $letter, $this->factor, $this->shift);
+    }
+
+    private static function subst(AlphabetInterface $alphabet, string $letter, int $factor, int $shift) : string
+    {
+        if (!$alphabet->isLetter($letter)) {
             return $letter;
         }
 
-        $code = $this->alphabet->getLetterCode($letter);
-        $code = ($code * $this->factor + $this->shift) % $this->alphabet->getLength();
+        $code = ($alphabet->getLetterCode($letter) * $factor + $shift) % $alphabet->getLength();
 
-        return $this->alphabet->getLetter($code);
+        return $alphabet->getLetter($code);
     }
 
     /**
@@ -126,13 +123,5 @@ class LinearSubstitutionCipher implements SubstitutionCipherInterface
     public function crack(string $code) : string
     {
         throw new BadMethodCallException("Not implemented yet");
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlphabet() : AlphabetInterface
-    {
-        return $this->alphabet;
     }
 }

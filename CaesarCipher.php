@@ -2,8 +2,6 @@
 namespace def\Cipher;
 
 use def\Cipher\Alphabet\AlphabetInterface;
-use def\Cipher\Context\ContextInterface;
-use def\Cipher\Context\Context;
 
 /**
  * Caesar chiper
@@ -11,30 +9,11 @@ use def\Cipher\Context\Context;
  */
 class CaesarCipher extends LinearSubstitutionCipher
 {
-    const CONTEXT_KEY_SHIFT = self::class . '-shift';
-
     /**
      * {@inheritdoc}
      */
-    public function __construct(AlphabetInterface $alphabet, ContextInterface $context = null)
+    public function __construct(AlphabetInterface $alphabet, int $shift)
     {
-        $shift = 0;
-
-        if (isset($context)) {
-            if ($context->exists(parent::CONTEXT_KEY_SHIFT)) {
-                $shift = $context->get(parent::CONTEXT_KEY_SHIFT);
-            }
-
-            if ($context->exists(self::CONTEXT_KEY_SHIFT)) {
-                $shift = $context->get(self::CONTEXT_KEY_SHIFT);
-            }
-        }
-
-        $context = new Context([
-            parent::CONTEXT_KEY_FACTOR => 1,
-            parent::CONTEXT_KEY_SHIFT => $shift,
-        ]);
-
-        parent::__construct($alphabet, $context);
+        parent::__construct($alphabet, 1, $shift);
     }
 }
