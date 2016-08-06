@@ -38,17 +38,24 @@ class VigenereCipher implements CipherInterface
 
         $shiftsCount = count($this->shifts);
 
-        foreach (str_split($string) as $i => $letter) {
-            if (!$this->alphabet->isLetter($letter)) {
+        $counter = 0;
+
+        foreach (str_split($string) as $letter) {
+            if ($this->alphabet->isLetter($letter)) {
+                $code = $this->alphabet->getLetterCode($letter);
+                $code += $this->shifts[$counter % $shiftsCount];
+                $code %= $this->alphabet->getLength();
+
+                $letters[] = $this->alphabet->getLetter($code);
+
+                $counter++;
+            } else {
                 $letters[] = $letter;
-                continue;
+
+                if (!preg_match("~^\\s$~", $letter)) {
+                    $counter++;
+                }
             }
-
-            $code = $this->alphabet->getLetterCode($letter);
-            $code += $this->shifts[$i % $shiftsCount];
-            $code %= $this->alphabet->getLength();
-
-            $letters[] = $this->alphabet->getLetter($code);
         }
 
         return implode($letters);
@@ -60,20 +67,27 @@ class VigenereCipher implements CipherInterface
 
         $shiftsCount = count($this->shifts);
 
-        foreach (str_split($code) as $i => $letter) {
-            if (!$this->alphabet->isLetter($letter)) {
+        $counter = 0;
+
+        foreach (str_split($code) as $letter) {
+            if ($this->alphabet->isLetter($letter)) {
+                $code = $this->alphabet->getLetterCode($letter);
+                $code -= $this->shifts[$counter % $shiftsCount];
+                $code %= $this->alphabet->getLength();
+                if ($code < 0) {
+                    $code += $this->alphabet->getLength();
+                }
+
+                $letters[] = $this->alphabet->getLetter($code);
+
+                $counter++;
+            } else {
                 $letters[] = $letter;
-                continue;
-            }
 
-            $code = $this->alphabet->getLetterCode($letter);
-            $code -= $this->shifts[$i % $shiftsCount];
-            $code %= $this->alphabet->getLength();
-            if ($code < 0) {
-                $code += $this->alphabet->getLength();
+                if (!preg_match("~^\\s$~", $letter)) {
+                    $counter++;
+                }
             }
-
-            $letters[] = $this->alphabet->getLetter($code);
         }
 
         return implode($letters);
