@@ -14,7 +14,7 @@ print $rot13->encode("Hello, world\n");
 
 or
 
-```
+```php
 use def\Cipher\VigenereCipher;
 use def\Cipher\Alphabet\EnglishAlphabet;
 
