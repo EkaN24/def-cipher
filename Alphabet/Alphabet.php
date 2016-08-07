@@ -19,8 +19,8 @@ class Alphabet implements IteratorAggregate, AlphabetInterface
      */
     public function __construct(array $letters)
     {
-        $this->enumeration = array_values($letters);
-        $this->letters = array_combine($this->enumeration, $this->enumeration);
+        $this->letters = array_combine($letters, $letters);
+        $this->enumeration = array_values($this->letters);
     }
 
     /**
