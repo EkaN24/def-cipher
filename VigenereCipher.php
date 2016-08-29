@@ -51,10 +51,6 @@ class VigenereCipher implements CipherInterface
                 $counter++;
             } else {
                 $letters[] = $letter;
-
-                if (preg_match("~^\\pL$~u", $letter)) {
-                    $counter++;
-                }
             }
         }
 
@@ -83,10 +79,6 @@ class VigenereCipher implements CipherInterface
                 $counter++;
             } else {
                 $letters[] = $letter;
-
-                if (preg_match("~^\\pL$~", $letter)) {
-                    $counter++;
-                }
             }
         }
 
